@@ -1,12 +1,11 @@
 import axios from "axios";
 
-export async function getPrices(tokens: string[], vsCurrency: string, chainId: number, authKey: string): Promise<any | null> {
+export async function getChart(token: string, vsCurrency: string, chainId: number, authKey: string): Promise<any | null> {
     try {
-        const tokensString = tokens.join(',')
-
-        const url = `https://api.1inch.dev/price/v1.1/${chainId}/${tokensString}?currency=${vsCurrency}`
+        const url = `https://api.1inch.dev/portfolio/v2/prices/token_prices/time_range?chain_id=${chainId}&contract_address=${token}&currency=${vsCurrency}&granularity=day
+`
         const options = {
-            method: 'GET',
+            method: 'POST',
             url,
             headers: {
                 'Authorization': `Bearer ${authKey}`,

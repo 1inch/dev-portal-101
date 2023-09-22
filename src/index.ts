@@ -7,18 +7,24 @@ import {
     OneInchToken,
     OneInchTokenAmount,
     pk,
-    sleep
+    sleep,
+    USDCCoinBSC,
+    WETH_Token
 } from "./config/config";
 import {buildSwapTx, getAddressFromPrivateKey, getQuote, signAndSendTransaction} from "./swap-api";
 import {approveERC20Token} from "./swap-api/approve";
 import Web3 from "web3";
 import {getTokenList, search} from "./token-api";
 import {getPrices} from "./spot-price-api";
+import {getChart} from "./portfolio-api";
+import {getBalancesAndAllowances} from "./balance-api";
 
 
 const DO_APPROVE = false;
+const DO_BALANCES = true;
 const DO_SEARCH = false;
-const DO_PRICES = true;
+const DO_CHART = false;
+const DO_PRICES = false;
 const DO_SWAP = false;
 const DO_QUOTE = false;
 
@@ -64,6 +70,42 @@ async function main() {
         if (prices) {
             console.log('-------------------')
             console.log('token prices, ', prices);
+            console.log('-------------------')
+        }
+    }
+
+    if (DO_CHART) {
+        const chart = await getChart(
+            '0x0d8775f648430679a709e98d2b0cb6250d2887ef',
+            'usd',
+            network,
+            authKey)
+
+        await sleep(1001);
+        if (chart) {
+            console.log('-------------------')
+            console.log('token chart, ', chart);
+            console.log('-------------------')
+        }
+    }
+
+    if (DO_BALANCES) {
+        const balances = await getBalancesAndAllowances(
+            [
+                OneInchToken,
+                USDCCoinBSC,
+                WETH_Token
+            ],
+            getAddressFromPrivateKey(pk),
+            OneInchRouter,
+            network,
+            authKey)
+
+        await sleep(1001);
+
+        if (balances) {
+            console.log('-------------------')
+            console.log('balances, ', balances);
             console.log('-------------------')
         }
     }
