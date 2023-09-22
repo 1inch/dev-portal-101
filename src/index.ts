@@ -18,10 +18,12 @@ import {getTokenList, search} from "./token-api";
 import {getPrices} from "./spot-price-api";
 import {getChart} from "./portfolio-api";
 import {getBalancesAndAllowances} from "./balance-api";
+import {getInterval, getTxTrace} from "./traces-api";
 
 
 const DO_APPROVE = false;
-const DO_BALANCES = true;
+const DO_BALANCES = false;
+const DO_TRACE = false;
 const DO_SEARCH = false;
 const DO_CHART = false;
 const DO_PRICES = false;
@@ -131,6 +133,27 @@ async function main() {
 
         const txHash = await signAndSendTransaction(web3, pk, swapTx, network, authKey);
         console.log(txHash);
+    }
+
+    if (DO_TRACE) {
+        const inerval = await getInterval(network, authKey)
+        if (!inerval) {
+            throw new Error('Failed to get interval')
+        }
+
+        if (inerval.to < 18192656) {
+            throw new Error('Block is not synced yet')
+        }
+        await sleep(1001);
+
+        const trace = await getTxTrace('0xa49ea119108d269c9a744d17ceba968578a87dfd5ee322ff6fbc11011202fbfe', 18192656, network, authKey)
+        await sleep(1001);
+
+        if (trace) {
+            console.log('-------------------')
+            console.log('trace, ', trace);
+            console.log('-------------------')
+        }
     }
 
 }
