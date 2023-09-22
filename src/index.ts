@@ -13,10 +13,12 @@ import {buildSwapTx, getAddressFromPrivateKey, getQuote, signAndSendTransaction}
 import {approveERC20Token} from "./swap-api/approve";
 import Web3 from "web3";
 import {getTokenList, search} from "./token-api";
+import {getPrices} from "./spot-price-api";
 
 
 const DO_APPROVE = false;
-const DO_SEARCH = true;
+const DO_SEARCH = false;
+const DO_PRICES = true;
 const DO_SWAP = false;
 const DO_QUOTE = false;
 
@@ -47,6 +49,21 @@ async function main() {
         if (tokenListByProvider) {
             console.log('-------------------')
             console.log('tokenListByProvider, ', tokenListByProvider);
+            console.log('-------------------')
+        }
+    }
+
+    if (DO_PRICES) {
+        const prices = await getPrices(
+            ['0x0d8775f648430679a709e98d2b0cb6250d2887ef', '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', '0x196f4727526ea7fb1e17b2071b3d8eaa38486988'],
+            'USD',
+            network,
+            authKey)
+
+        await sleep(1001);
+        if (prices) {
+            console.log('-------------------')
+            console.log('token prices, ', prices);
             console.log('-------------------')
         }
     }
