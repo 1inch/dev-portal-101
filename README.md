@@ -1,4 +1,4 @@
-# fusion-101
+# Dev portal 101
 1inch Dev portal 101: Basic how-to examples for public workshops
 
 ## Installation 
